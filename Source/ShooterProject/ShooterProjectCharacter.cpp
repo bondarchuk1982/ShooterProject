@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
+#include "Engine/World.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -84,11 +85,53 @@ AShooterProjectCharacter::AShooterProjectCharacter()
 	//bUsingMotionControllers = true;
 }
 
+void AShooterProjectCharacter::StartGame()
+{
+	totalScore = 0;
+	totalLevel = 1;
+
+	auto location = FP_MuzzleLocation->GetComponentLocation() + FVector(25.000000, 25.000000, 25.000000);
+	auto rotation = GetControlRotation();
+
+	SpawnSphers(location, rotation);
+
+	//GeneretaSpheres(startCountSpheresSpawning, startRadiusSpheresSpawning, startMinimumDistance);
+}
+
+void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radiusSpawn, const int &minDis)
+{
+	for (int i = 0; i < count; ++i) {
+		auto location = FP_MuzzleLocation->GetComponentLocation();
+		auto rotation = GetControlRotation();
+
+		SpawnSphers(location, rotation);
+	}
+}
+
+void AShooterProjectCharacter::SpawnSphers(FVector location, FRotator rotation)
+{
+	UWorld* const World = GetWorld();
+
+	World->SpawnActor(ActorToSpawn, &location, &rotation);
+}
+
+void AShooterProjectCharacter::incrementTotalScore()
+{
+	++totalScore;
+
+	if (!(totalScore % 10)) {
+		++totalLevel;
+
+		//GeneretaSpheres(countSpheresSpawning, totalRadiusSpheresSpawning, minimumDistance);
+	}
+}
+
 void AShooterProjectCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
 
+	StartGame();
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
