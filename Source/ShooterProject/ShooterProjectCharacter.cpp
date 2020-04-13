@@ -1,4 +1,10 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+#include <cstdlib>
+#include <ctime>
+#include <vector>
+#include <algorithm>
+#include <math.h>
+
 
 #include "ShooterProjectCharacter.h"
 #include "ShooterProjectProjectile.h"
@@ -90,18 +96,54 @@ void AShooterProjectCharacter::StartGame()
 	totalScore = 0;
 	totalLevel = 1;
 
-	auto location = FP_MuzzleLocation->GetComponentLocation() + FVector(25.000000, 25.000000, 25.000000);
+	auto location = FP_MuzzleLocation->GetComponentLocation();
 	auto rotation = GetControlRotation();
 
-	SpawnSphers(location, rotation);
-
-	//GeneretaSpheres(startCountSpheresSpawning, startRadiusSpheresSpawning, startMinimumDistance);
+	GeneretaSpheres(startCountSpheresSpawning, startRadiusSpheresSpawning, startMinimumDistance);
 }
 
 void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radiusSpawn, const int &minDis)
 {
+	std::srand(unsigned(std::time(0)));
+
+	int radius = startRadiusSpheresSpawning + radiusSpawn;
+	auto newPoint = FVector(std::rand() % radius - startRadiusSpheresSpawning,
+		std::rand() % radius - startRadiusSpheresSpawning, 25.000000);
+
+	std::vector<FVector> spawnPoints = { newPoint };
+
+	auto isGeneratedSpawnPoints = [=]() {
+		for (const auto &point : spawnPoints) {
+			auto x = std::abs(point.X - newPoint.X) * std::abs(point.X - newPoint.X);
+			auto y = std::abs(point.Y - newPoint.Y) * std::abs(point.Y - newPoint.Y);
+			auto z = std::abs(point.Z - newPoint.Z) * std::abs(point.Z - newPoint.Z);
+
+			auto dist = sqrt(std::abs(x + y + z));
+
+			if (dist > minDis) {
+				return false;
+			}
+		}
+
+		return true;
+	};
+
+	int iterator = 0;
+	while (iterator < count)
+	{
+		newPoint = FVector(std::rand() % radius - startRadiusSpheresSpawning,
+			std::rand() % radius - startRadiusSpheresSpawning, std::rand() % 25 - 50);
+		if (isGeneratedSpawnPoints()) {
+			spawnPoints.push_back(newPoint);
+			++iterator;
+		}
+	}
+
+
+
+
 	for (int i = 0; i < count; ++i) {
-		auto location = FP_MuzzleLocation->GetComponentLocation();
+		auto location = FP_MuzzleLocation->GetComponentLocation() + spawnPoints.at(i);
 		auto rotation = GetControlRotation();
 
 		SpawnSphers(location, rotation);
@@ -120,9 +162,10 @@ void AShooterProjectCharacter::incrementTotalScore()
 	++totalScore;
 
 	if (!(totalScore % 10)) {
-		++totalLevel;
+		GeneretaSpheres(countSpheresSpawning + countSpheresSpawning * (incrementCountSpheresSpawningInLevel * totalLevel),
+						totalRadiusSpheresSpawning + totalRadiusSpheresSpawning * (incrementRadiusSpheresSpawningInLevel * totalLevel), minimumDistance);
 
-		//GeneretaSpheres(countSpheresSpawning, totalRadiusSpheresSpawning, minimumDistance);
+		++totalLevel;
 	}
 }
 

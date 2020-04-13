@@ -45,11 +45,6 @@ class AShooterProjectCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMotionControllerComponent* L_MotionController;
 
-
-	const int startCountSpheresSpawning = 15;
-	const int startRadiusSpheresSpawning = 2000;
-	const int startMinimumDistance = 80;
-
 public:
 	AShooterProjectCharacter();
 
@@ -60,7 +55,35 @@ public:
 protected:
 	virtual void BeginPlay();
 
+	const int startCountSpheresSpawning = 15;
+	const int startRadiusSpheresSpawning = 2000;
+	const int startMinimumDistance = 80;
+
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
+		int totalScore = 0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
+		int totalLevel = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
+		int totalRadiusSpheresSpawning = 1500;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
+		int minimumDistance = 80;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
+		int countSpheresSpawning = 15;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
+		float incrementCountSpheresSpawningInLevel = 0.1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
+		float incrementRadiusSpheresSpawningInLevel = 0.05;
+
+	UFUNCTION(BlueprintCallable, Category = "SphereSpawn")
+		void incrementTotalScore();
+
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -91,30 +114,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
 	TSubclassOf<AActor> ActorToSpawn;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	int totalScore = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
-	int totalLevel = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	int totalRadiusSpheresSpawning = 1500;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	int minimumDistance = 80;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	int countSpheresSpawning = 15;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	float incrementCountSpheresSpawningInLevel = 0.1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	float incrementRadiusSpheresSpawningInLevel = 0.05;
-
-	UFUNCTION(BlueprintCallable, Category = "SphereSpawn")
-	void incrementTotalScore();
 
 protected:
 	
