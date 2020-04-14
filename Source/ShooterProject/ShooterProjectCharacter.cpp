@@ -131,7 +131,7 @@ void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radi
 		return true;
 	};
 
-	int iterator = 0;
+	int iterator = 1;
 	while (iterator < count)
 	{
 		newPoint = FVector(std::rand() % radius - startRadiusSpheresSpawning,
