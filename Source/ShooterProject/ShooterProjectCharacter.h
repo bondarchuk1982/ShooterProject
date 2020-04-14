@@ -58,6 +58,11 @@ protected:
 	const int startCountSpheresSpawning = 15;
 	const int startRadiusSpheresSpawning = 2000;
 	const int startMinimumDistance = 80;
+	int totalRadiusSpheresSpawning = 1500;
+	int minimumDistance = 80;
+	int countSpheresSpawning = 15;
+	float incrementCountSpheresSpawningInLevel = 0.1;
+	float incrementRadiusSpheresSpawningInLevel = 0.05;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
@@ -65,21 +70,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
 		int totalLevel = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-		int totalRadiusSpheresSpawning = 1500;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-		int minimumDistance = 80;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-		int countSpheresSpawning = 15;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-		float incrementCountSpheresSpawningInLevel = 0.1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-		float incrementRadiusSpheresSpawningInLevel = 0.05;
 
 	UFUNCTION(BlueprintCallable, Category = "SphereSpawn")
 		void incrementTotalScore();

@@ -108,8 +108,11 @@ void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radi
 
 	int radius = startRadiusSpheresSpawning + radiusSpawn;
 	auto newPoint = FVector(std::rand() % radius - startRadiusSpheresSpawning,
-		std::rand() % radius - startRadiusSpheresSpawning, 25.000000);
-
+		std::rand() % radius - startRadiusSpheresSpawning, std::rand() % 240 + 10);
+	auto location = FP_MuzzleLocation->GetComponentLocation() + newPoint;
+	auto rotation = GetControlRotation();
+	
+	SpawnSphers(location, rotation);
 	std::vector<FVector> spawnPoints = { newPoint };
 
 	auto isGeneratedSpawnPoints = [=]() {
@@ -132,21 +135,15 @@ void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radi
 	while (iterator < count)
 	{
 		newPoint = FVector(std::rand() % radius - startRadiusSpheresSpawning,
-			std::rand() % radius - startRadiusSpheresSpawning, std::rand() % 25 - 50);
+			std::rand() % radius - startRadiusSpheresSpawning, std::rand() % 240 + 10);
 		if (isGeneratedSpawnPoints()) {
+			location = FP_MuzzleLocation->GetComponentLocation() + newPoint;
+			rotation = GetControlRotation();
+
+			SpawnSphers(location, rotation);
 			spawnPoints.push_back(newPoint);
 			++iterator;
 		}
-	}
-
-
-
-
-	for (int i = 0; i < count; ++i) {
-		auto location = FP_MuzzleLocation->GetComponentLocation() + spawnPoints.at(i);
-		auto rotation = GetControlRotation();
-
-		SpawnSphers(location, rotation);
 	}
 }
 
@@ -162,8 +159,9 @@ void AShooterProjectCharacter::incrementTotalScore()
 	++totalScore;
 
 	if (!(totalScore % 10)) {
-		GeneretaSpheres(countSpheresSpawning + countSpheresSpawning * (incrementCountSpheresSpawningInLevel * totalLevel),
-						totalRadiusSpheresSpawning + totalRadiusSpheresSpawning * (incrementRadiusSpheresSpawningInLevel * totalLevel), minimumDistance);
+		GeneretaSpheres(countSpheresSpawning + static_cast<int>(countSpheresSpawning * (incrementCountSpheresSpawningInLevel * totalLevel)),
+						totalRadiusSpheresSpawning + static_cast<int>(totalRadiusSpheresSpawning * (incrementRadiusSpheresSpawningInLevel * totalLevel)),
+						minimumDistance);
 
 		++totalLevel;
 	}
