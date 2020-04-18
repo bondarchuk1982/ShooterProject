@@ -1,10 +1,4 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
-#include <cstdlib>
-#include <ctime>
-#include <vector>
-#include <algorithm>
-#include <math.h>
-
 
 #include "ShooterProjectCharacter.h"
 #include "ShooterProjectProjectile.h"
@@ -86,22 +80,9 @@ AShooterProjectCharacter::AShooterProjectCharacter()
 	VR_MuzzleLocation->SetupAttachment(VR_Gun);
 	VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
 	VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
-
-	// Uncomment the following line to turn motion controllers on by default:
-	//bUsingMotionControllers = true;
 }
 
-void AShooterProjectCharacter::StartGame()
-{
-	totalScore = 0;
-	totalLevel = 1;
-
-	auto location = FP_MuzzleLocation->GetComponentLocation();
-	auto rotation = GetControlRotation();
-
-	GeneretaSpheres(startCountSpheresSpawning, startRadiusSpheresSpawning, startMinimumDistance);
-}
-
+/*
 void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radiusSpawn, const int &minDis)
 {
 	std::srand(unsigned(std::time(0)));
@@ -146,33 +127,12 @@ void AShooterProjectCharacter::GeneretaSpheres(const int &count, const int &radi
 		}
 	}
 }
-
-void AShooterProjectCharacter::SpawnSphers(FVector location, FRotator rotation)
-{
-	UWorld* const World = GetWorld();
-
-	World->SpawnActor(ActorToSpawn, &location, &rotation);
-}
-
-void AShooterProjectCharacter::incrementTotalScore()
-{
-	++totalScore;
-
-	if (!(totalScore % 10)) {
-		GeneretaSpheres(countSpheresSpawning + static_cast<int>(countSpheresSpawning * (incrementCountSpheresSpawningInLevel * totalLevel)),
-						totalRadiusSpheresSpawning + static_cast<int>(totalRadiusSpheresSpawning * (incrementRadiusSpheresSpawningInLevel * totalLevel)),
-						minimumDistance);
-
-		++totalLevel;
-	}
-}
-
+*/
 void AShooterProjectCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
 
-	StartGame();
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -299,44 +259,6 @@ void AShooterProjectCharacter::EndTouch(const ETouchIndex::Type FingerIndex, con
 	}
 	TouchItem.bIsPressed = false;
 }
-
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AShooterProjectCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
 
 void AShooterProjectCharacter::MoveForward(float Value)
 {

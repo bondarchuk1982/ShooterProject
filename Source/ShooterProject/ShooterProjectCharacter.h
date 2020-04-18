@@ -48,32 +48,10 @@ class AShooterProjectCharacter : public ACharacter
 public:
 	AShooterProjectCharacter();
 
-	void StartGame();
-	void GeneretaSpheres(const int &count, const int &radiusSpawn, const int &minDis);
-	void SpawnSphers(FVector location, FRotator rotation);
-
 protected:
 	virtual void BeginPlay();
 
-	const int startCountSpheresSpawning = 15;
-	const int startRadiusSpheresSpawning = 2000;
-	const int startMinimumDistance = 80;
-	int totalRadiusSpheresSpawning = 1500;
-	int minimumDistance = 80;
-	int countSpheresSpawning = 15;
-	float incrementCountSpheresSpawningInLevel = 0.1;
-	float incrementRadiusSpheresSpawningInLevel = 0.05;
-
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
-		int totalScore = 0;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SphereSpawn")
-		int totalLevel = 1;
-
-	UFUNCTION(BlueprintCallable, Category = "SphereSpawn")
-		void incrementTotalScore();
-
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseTurnRate;
@@ -101,9 +79,6 @@ public:
 	/** Whether to use motion controller location for aiming. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 	uint32 bUsingMotionControllers : 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SphereSpawn")
-	TSubclassOf<AActor> ActorToSpawn;
 
 protected:
 	
